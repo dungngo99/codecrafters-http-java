@@ -16,12 +16,22 @@ public class HttpUtils {
         return joiner.toString();
     }
 
-    public static String getStatus() {
+    public static String getOKStatus() {
         StringJoiner status = new StringJoiner(OutputConstants.TAB);
         status
                 .add(OutputConstants.HTTP_VERSION)
-                .add(StatusCode.OK.getCode())
-                .add(StatusCode.OK.name());
+                .add(String.valueOf(StatusCode.OK.getCode()))
+                .add(StatusCode.OK.getMessage());
+        List<String> list = List.of(status.toString(), OutputConstants.EMPTY_STRING);
+        return fromList(list);
+    }
+
+    public  static String getNotFoundStatus() {
+        StringJoiner status = new StringJoiner(OutputConstants.TAB);
+        status
+                .add(OutputConstants.HTTP_VERSION)
+                .add(String.valueOf(StatusCode.NOT_FOUND.getCode()))
+                .add(StatusCode.NOT_FOUND.getMessage());
         List<String> list = List.of(status.toString(), OutputConstants.EMPTY_STRING);
         return fromList(list);
     }

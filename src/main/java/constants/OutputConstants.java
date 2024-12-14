@@ -5,4 +5,6 @@ public class OutputConstants {
     public static final String CRLF = "\r\n";
     public static final String EMPTY_STRING = "";
     public static final String TAB = " ";
+    public static final String ROOT = "";
+    public static final String PATH_DELIMITER = "/";
 }
