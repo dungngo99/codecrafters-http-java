@@ -1,4 +1,4 @@
-package utils;
+package service;
 
 import constants.OutputConstants;
 import dto.RequestDto;
@@ -11,9 +11,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HttpParserUtils {
+public class HttpRequest {
 
-    public static RequestDto parseHttpRequest(InputStream inputStream) {
+    public static RequestDto parseRequest(InputStream inputStream) {
         RequestDto requestDto = new RequestDto();
         try {
             List<String> list = new ArrayList<>();

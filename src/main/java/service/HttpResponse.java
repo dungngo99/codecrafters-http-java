@@ -1,19 +1,18 @@
-package utils;
+package service;
 
 import constants.OutputConstants;
+import dto.PathDto;
 import dto.RequestDto;
 
-public class HttpProcessUtils {
+public class HttpResponse {
 
     public static String process(RequestDto requestDto) {
         String target = requestDto.getTargetMethod();
         if (target == null || target.isEmpty()) {
-            return HttpUtils.getNotFoundStatus();
+            return OutputConstants.EMPTY_STRING;
         }
         String[] targets = target.split(OutputConstants.PATH_DELIMITER);
-        if (targets.length == 0) {
-            return HttpUtils.getOKStatus();
-        }
-        return HttpUtils.getNotFoundStatus();
+        PathDto pathDto = HttpPath.resolvePath(targets);
+        return pathDto.getPathHandler().process(pathDto.getTargets());
     }
 }

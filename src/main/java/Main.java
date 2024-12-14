@@ -1,7 +1,7 @@
 import dto.RequestDto;
-import service.MapLoader;
-import utils.HttpParserUtils;
-import utils.HttpProcessUtils;
+import service.HttpPath;
+import service.HttpRequest;
+import service.HttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) {
         // You can use print statements as follows for debugging, they'll be visible when running tests.
         // System.out.println("Logs from your program will appear here!");
-        MapLoader.load();
+        HttpPath.registerPath();
 
         try {
             ServerSocket serverSocket = new ServerSocket(4221);
@@ -27,10 +27,10 @@ public class Main {
 
              // parse the input stream
              InputStream inputStream = socket.getInputStream();
-             RequestDto requestDto = HttpParserUtils.parseHttpRequest(inputStream);
+             RequestDto requestDto = HttpRequest.parseRequest(inputStream);
 
              // process the request
-             String response = HttpProcessUtils.process(requestDto);
+             String response = HttpResponse.process(requestDto);
 
              // send response to output stream
              OutputStream outputStream = socket.getOutputStream();
