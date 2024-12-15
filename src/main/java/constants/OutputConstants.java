@@ -22,4 +22,5 @@ public class OutputConstants {
     public static final String REQUEST_HEADER_DELIMITER = ": ";
     public static final Integer REQUEST_HEADER_KEY_INDEX = 0;
     public static final Integer REQUEST_HEADER_VALUE_INDEX = 1;
+    public static final Integer THREAD_SLEEP_100_MICROS = 100;
 }
