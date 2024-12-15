@@ -44,7 +44,7 @@ public class HttpUtils {
         return header.toString();
     }
 
-    public static String getPlainText(String text) {
+    public static String getResponseWithBodyAsPlainText(String text) {
         StringJoiner statusLine = new StringJoiner(OutputConstants.TAB);
         statusLine
                 .add(OutputConstants.HTTP_VERSION)

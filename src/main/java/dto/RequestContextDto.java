@@ -2,11 +2,14 @@ package dto;
 
 import handler.PathHandler;
 
-public class PathDto {
+import java.util.Map;
+
+public class RequestContextDto {
     private String[] targets;
     private PathHandler pathHandler;
+    private Map<String, String> headers;
 
-    public PathDto(String[] targets, PathHandler pathHandler) {
+    public RequestContextDto(String[] targets, PathHandler pathHandler) {
         this.targets = targets;
         this.pathHandler = pathHandler;
     }
@@ -25,5 +28,13 @@ public class PathDto {
 
     public void setPathHandler(PathHandler pathHandler) {
         this.pathHandler = pathHandler;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
     }
 }

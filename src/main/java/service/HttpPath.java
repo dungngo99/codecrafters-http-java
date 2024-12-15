@@ -2,12 +2,13 @@ package service;
 
 import constants.OutputConstants;
 import dto.NodeDto;
-import dto.PathDto;
+import dto.RequestContextDto;
 import enums.Endpoint;
 import handler.PathHandler;
 import handler.impl.EchoHandler;
 import handler.impl.NotFoundHandler;
 import handler.impl.RootHandler;
+import handler.impl.UserAgentHandler;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class HttpPath {
         new NotFoundHandler().registerPath();
         new RootHandler().registerPath();
         new EchoHandler().registerPath();
+        new UserAgentHandler().registerPath();
     }
 
     public static void loadPath(NodeDto[] paths) {
@@ -63,17 +65,17 @@ public class HttpPath {
         return nodeDtoArr;
     }
 
-    public static PathDto resolvePath(String[] targets) {
+    public static RequestContextDto resolvePath(String[] targets) {
         if (targets == null || targets.length == 0) {
-            return new PathDto(new String[0], ROOT.getPathHandler());
+            return new RequestContextDto(new String[0], ROOT.getPathHandler());
         }
 
         return resolvePath0(ROOT, targets);
     }
 
-    private static PathDto resolvePath0(NodeDto root, String[] targets) {
+    private static RequestContextDto resolvePath0(NodeDto root, String[] targets) {
         if (targets == null || targets.length == 0) {
-            return new PathDto(new String[0], NOT_FOUND.getPathHandler());
+            return new RequestContextDto(new String[0], NOT_FOUND.getPathHandler());
         }
 
         String target = targets[0];
@@ -82,7 +84,7 @@ public class HttpPath {
         String[] nextTargets = Arrays.copyOfRange(targets, 1, targets.length);
         if (nextRoot != null && nextRoot.isTerminal()) {
             PathHandler pathHandler = nextRoot.getPathHandler();
-            return new PathDto(nextTargets, pathHandler);
+            return new RequestContextDto(nextTargets, pathHandler);
         }
 
         return resolvePath0(nextRoot, nextTargets);

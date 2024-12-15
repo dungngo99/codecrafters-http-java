@@ -2,6 +2,7 @@ package handler.impl;
 
 import constants.OutputConstants;
 import dto.NodeDto;
+import dto.RequestContextDto;
 import enums.Endpoint;
 import handler.PathHandler;
 import service.HttpPath;
@@ -17,7 +18,7 @@ public class NotFoundHandler implements PathHandler {
     }
 
     @Override
-    public String process(String[] targets) {
+    public String process(RequestContextDto contextDto) {
         return HttpUtils.getNotFoundStatus();
     }
 }

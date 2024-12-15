@@ -3,9 +3,10 @@ package enums;
 public enum Endpoint {
 
     NOT_FOUND("", true),
-    ROOT("/", true),
+    ROOT("/", false),
     ECHO("/echo", true),
-    ECHO_STR("/echo/{str}", false);
+    ECHO_STR("/echo/{str}", false),
+    USER_AGENT("/user-agent", true);
 
     private String path;
     private boolean isTerminal;

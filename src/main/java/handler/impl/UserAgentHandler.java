@@ -7,19 +7,18 @@ import handler.PathHandler;
 import service.HttpPath;
 import utils.HttpUtils;
 
-public class EchoHandler implements PathHandler {
+public class UserAgentHandler implements PathHandler {
     @Override
     public void registerPath() {
-        HttpPath.loadPath(HttpPath.convert2PathNode(Endpoint.ECHO, this));
-        HttpPath.loadPath(HttpPath.convert2PathNode(Endpoint.ECHO_STR, this));
+        HttpPath.loadPath(HttpPath.convert2PathNode(Endpoint.USER_AGENT, this));
     }
 
     @Override
     public String process(RequestContextDto contextDto) {
-        String[] targets = contextDto.getTargets();
-        if (targets == null || targets.length == 0) {
+        if (contextDto == null || contextDto.getHeaders().isEmpty()) {
             return OutputConstants.EMPTY_STRING;
         }
-        return HttpUtils.getResponseWithBodyAsPlainText(targets[0]);
+        String userAgent = contextDto.getHeaders().get(OutputConstants.USER_AGENT);
+        return HttpUtils.getResponseWithBodyAsPlainText(userAgent);
     }
 }

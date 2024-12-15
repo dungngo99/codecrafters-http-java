@@ -1,8 +1,9 @@
 package service;
 
 import constants.OutputConstants;
-import dto.PathDto;
+import dto.RequestContextDto;
 import dto.RequestDto;
+import handler.PathHandler;
 
 public class HttpResponse {
 
@@ -11,8 +12,12 @@ public class HttpResponse {
         if (target == null || target.isEmpty()) {
             return OutputConstants.EMPTY_STRING;
         }
+
         String[] targets = target.split(OutputConstants.PATH_DELIMITER);
-        PathDto pathDto = HttpPath.resolvePath(targets);
-        return pathDto.getPathHandler().process(pathDto.getTargets());
+        RequestContextDto contextDto = HttpPath.resolvePath(targets);
+        contextDto.setHeaders(requestDto.getHeaders());
+
+        PathHandler pathHandler = contextDto.getPathHandler();
+        return pathHandler.process(contextDto);
     }
 }

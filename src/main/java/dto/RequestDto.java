@@ -1,5 +1,6 @@
 package dto;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class RequestDto {
@@ -8,6 +9,10 @@ public class RequestDto {
     private String httpVersion;
     private Map<String, String> headers;
     private Object body;
+
+    public RequestDto() {
+        this.headers = new HashMap<>();
+    }
 
     public String getHttpMethod() {
         return httpMethod;
