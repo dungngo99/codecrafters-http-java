@@ -8,7 +8,7 @@ public class RequestDto {
     private String targetMethod;
     private String httpVersion;
     private Map<String, String> headers;
-    private Object body;
+    private String body;
 
     public RequestDto() {
         this.headers = new HashMap<>();
@@ -46,11 +46,11 @@ public class RequestDto {
         this.headers = headers;
     }
 
-    public Object getBody() {
+    public String getBody() {
         return body;
     }
 
-    public void setBody(Object body) {
+    public void setBody(String body) {
         this.body = body;
     }
 

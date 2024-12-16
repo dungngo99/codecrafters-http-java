@@ -8,8 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import static constants.OutputConstants.*;
 
@@ -18,35 +16,52 @@ public class HttpRequest {
     public static RequestDto parseRequest(InputStream inputStream) {
         RequestDto requestDto = new RequestDto();
         try {
-            List<String> list = new ArrayList<>();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            while (bufferedReader.ready()) {
-                list.add(bufferedReader.readLine());
-            }
-            if (list.isEmpty()) {
+            BufferedReaderHelper helper = new BufferedReaderHelper(bufferedReader);
+            if (!helper.canRead()) {
                 return requestDto;
             }
-            fillRequestLine(list.get(HTTP_METHOD_STATUS_LINE_INDEX), requestDto);
-            fillHeaders(list.subList(HTTP_METHOD_HEADER_INDEX_START, list.size()+HTTP_METHOD_HEADER_INDEX_END), requestDto);
+
+            fillRequestLine(helper, requestDto);
+            fillHeaders(helper, requestDto);
+            fillBody(helper, requestDto);
         } catch (IOException e) {
             System.out.printf("failed to parse http request due to, error=%s\n", e.getMessage());
         }
         return requestDto;
     }
 
-    private static void fillRequestLine(String requestLine, RequestDto requestDto) {
-        String[] requestLines = requestLine.split(OutputConstants.TAB);
+    private static void fillRequestLine(BufferedReaderHelper helper, RequestDto requestDto) {
+        char[] chars = helper.readNextChars();
+        String requestLine = new String(chars);
+        String[] requestLines = requestLine.split(TAB);
         requestDto.setHttpMethod(HttpMethod.ofString(requestLines[HTTP_METHOD_INDEX]));
         requestDto.setTargetMethod(requestLines[HTTP_TARGET_METHOD_INDEX]);
         requestDto.setHttpVersion(requestLines[HTTP_VERSION_INDEX]);
     }
 
-    private static void fillHeaders(List<String> headers, RequestDto requestDto) {
-        for (int i=0; i<headers.size(); i++) {
-            String[] pair = headers.get(i).split(REQUEST_HEADER_DELIMITER);
+    private static void fillHeaders(BufferedReaderHelper helper, RequestDto requestDto) {
+        while (true) {
+            char[] chars = helper.readNextChars();
+            if (chars.length == 0) {
+                break;
+            }
+            String header = new String(chars);
+            String[] pair = header.split(REQUEST_HEADER_DELIMITER);
             String key = pair[REQUEST_HEADER_KEY_INDEX].strip();
             String value = pair[REQUEST_HEADER_VALUE_INDEX].strip();
             requestDto.getHeaders().put(key, value);
         }
+    }
+
+    private static void fillBody(BufferedReaderHelper helper, RequestDto requestDto) {
+        String contentLength = requestDto.getHeaders().get(CONTENT_LENGTH);
+        if (contentLength == null || contentLength.isEmpty()) {
+            return;
+        }
+        Integer l = Integer.parseInt(contentLength);
+        char[] chars = helper.readNChars(l);
+        String body = new String(chars);
+        requestDto.setBody(body);
     }
 }

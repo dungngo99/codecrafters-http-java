@@ -72,8 +72,11 @@ public class HttpPath {
     }
 
     private static RequestContextDto resolvePath0(NodeDto root, String[] targets) {
-        if (targets == null || targets.length == 0) {
+        if (targets == null || root == null) {
             return new RequestContextDto(new String[0], NOT_FOUND.getPathHandler());
+        }
+        if (targets.length == 0) {
+            return new RequestContextDto(new String[0], root.getPathHandler());
         }
 
         String target = targets[0];

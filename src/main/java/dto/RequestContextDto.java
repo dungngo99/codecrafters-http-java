@@ -1,5 +1,6 @@
 package dto;
 
+import enums.ContentType;
 import handler.PathHandler;
 
 import java.util.Map;
@@ -8,6 +9,8 @@ public class RequestContextDto {
     private String[] targets;
     private PathHandler pathHandler;
     private Map<String, String> headers;
+    private String requestMethod;
+    private String body;
 
     public RequestContextDto(String[] targets, PathHandler pathHandler) {
         this.targets = targets;
@@ -36,5 +39,21 @@ public class RequestContextDto {
 
     public void setHeaders(Map<String, String> headers) {
         this.headers = headers;
+    }
+
+    public String getRequestMethod() {
+        return requestMethod;
+    }
+
+    public void setRequestMethod(String requestMethod) {
+        this.requestMethod = requestMethod;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 }

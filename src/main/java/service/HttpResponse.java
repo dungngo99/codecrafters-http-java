@@ -16,6 +16,8 @@ public class HttpResponse {
         String[] targets = target.split(OutputConstants.PATH_DELIMITER);
         RequestContextDto contextDto = HttpPath.resolvePath(targets);
         contextDto.setHeaders(requestDto.getHeaders());
+        contextDto.setRequestMethod(requestDto.getHttpMethod());
+        contextDto.setBody(requestDto.getBody());
 
         PathHandler pathHandler = contextDto.getPathHandler();
         return pathHandler.process(contextDto);
