@@ -10,7 +10,7 @@ import utils.HttpUtils;
 public class UserAgentHandler implements PathHandler {
     @Override
     public void registerPath() {
-        HttpPath.loadPath(HttpPath.convert2PathNode(Endpoint.USER_AGENT, this));
+        HttpPath.loadEndpoint(HttpPath.convert2PathNode(Endpoint.USER_AGENT, this));
     }
 
     @Override

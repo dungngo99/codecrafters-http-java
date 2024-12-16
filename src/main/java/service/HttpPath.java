@@ -5,10 +5,7 @@ import dto.NodeDto;
 import dto.RequestContextDto;
 import enums.Endpoint;
 import handler.PathHandler;
-import handler.impl.EchoHandler;
-import handler.impl.NotFoundHandler;
-import handler.impl.RootHandler;
-import handler.impl.UserAgentHandler;
+import handler.impl.*;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -22,9 +19,10 @@ public class HttpPath {
         new RootHandler().registerPath();
         new EchoHandler().registerPath();
         new UserAgentHandler().registerPath();
+        new FileHandler().registerPath();
     }
 
-    public static void loadPath(NodeDto[] paths) {
+    public static void loadEndpoint(NodeDto[] paths) {
         if (paths == null || paths.length == 0) {
             return;
         }

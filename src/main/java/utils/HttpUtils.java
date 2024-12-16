@@ -3,6 +3,7 @@ package utils;
 import constants.OutputConstants;
 import enums.StatusCode;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -32,7 +33,10 @@ public class HttpUtils {
                 .add(OutputConstants.HTTP_VERSION)
                 .add(String.valueOf(StatusCode.NOT_FOUND.getCode()))
                 .add(StatusCode.NOT_FOUND.getMessage());
-        List<String> list = List.of(status.toString(), OutputConstants.EMPTY_STRING);
+        StringJoiner headers = new StringJoiner(OutputConstants.CRLF, OutputConstants.EMPTY_STRING, OutputConstants.CRLF);
+        headers
+                .add(getHeader(OutputConstants.CONTENT_LENGTH, String.valueOf(OutputConstants.EMPTY_CONTENT_LENGTH)));
+        List<String> list = List.of(status.toString(), headers.toString(), OutputConstants.EMPTY_STRING);
         return fromList(list);
     }
 
@@ -52,9 +56,24 @@ public class HttpUtils {
                 .add(StatusCode.OK.getMessage());
         StringJoiner headers = new StringJoiner(OutputConstants.CRLF, OutputConstants.EMPTY_STRING, OutputConstants.CRLF);
         headers
-                .add(getHeader(OutputConstants.CONTENT_TYPE, OutputConstants.contentTypeTextPlain))
+                .add(getHeader(OutputConstants.CONTENT_TYPE, OutputConstants.CONTENT_TYPE_PLAIN_TEXT))
                 .add(getHeader(OutputConstants.CONTENT_LENGTH, String.valueOf(text.length())));
         String body = text;
+        List<String> list = List.of(statusLine.toString(), headers.toString(), body);
+        return fromList(list);
+    }
+
+    public static String getResponseWithBodyAsByteStream(byte[] bytes) {
+        StringJoiner statusLine = new StringJoiner(OutputConstants.TAB);
+        statusLine
+                .add(OutputConstants.HTTP_VERSION)
+                .add(String.valueOf(StatusCode.OK.getCode()))
+                .add(StatusCode.OK.getMessage());
+        StringJoiner headers = new StringJoiner(OutputConstants.CRLF, OutputConstants.EMPTY_STRING, OutputConstants.CRLF);
+        headers
+                .add(getHeader(OutputConstants.CONTENT_TYPE, OutputConstants.CONTENT_TYPE_APPLICATION_OCTET_STREAM))
+                .add(getHeader(OutputConstants.CONTENT_LENGTH, String.valueOf(bytes.length)));
+        String body = new String(bytes, StandardCharsets.UTF_8);
         List<String> list = List.of(statusLine.toString(), headers.toString(), body);
         return fromList(list);
     }

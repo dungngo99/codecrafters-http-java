@@ -6,7 +6,9 @@ public enum Endpoint {
     ROOT("/", false),
     ECHO("/echo", true),
     ECHO_STR("/echo/{str}", false),
-    USER_AGENT("/user-agent", true);
+    USER_AGENT("/user-agent", true),
+    FILE("/files", true),
+    FILE_STR("/files/{filename}", false);
 
     private String path;
     private boolean isTerminal;

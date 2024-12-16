@@ -10,8 +10,8 @@ import utils.HttpUtils;
 public class EchoHandler implements PathHandler {
     @Override
     public void registerPath() {
-        HttpPath.loadPath(HttpPath.convert2PathNode(Endpoint.ECHO, this));
-        HttpPath.loadPath(HttpPath.convert2PathNode(Endpoint.ECHO_STR, this));
+        HttpPath.loadEndpoint(HttpPath.convert2PathNode(Endpoint.ECHO, this));
+        HttpPath.loadEndpoint(HttpPath.convert2PathNode(Endpoint.ECHO_STR, this));
     }
 
     @Override

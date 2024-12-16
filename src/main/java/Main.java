@@ -10,6 +10,7 @@ public class Main {
         // You can use print statements as follows for debugging, they'll be visible when running tests.
         // System.out.println("Logs from your program will appear here!");
         HttpPath.registerPath();
+        SocketServer.addDirectoryIfExist(args);
 
         try {
             ServerSocket serverSocket = new ServerSocket(4221);

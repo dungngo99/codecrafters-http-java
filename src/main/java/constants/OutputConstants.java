@@ -10,7 +10,8 @@ public class OutputConstants {
     public static final String PATH_DELIMITER = "/";
     public static final String COLON = ":";
     public static final String CONTENT_TYPE = "Content-Type";
-    public static final String contentTypeTextPlain = "text/plain";
+    public static final String CONTENT_TYPE_PLAIN_TEXT = "text/plain";
+    public static final String CONTENT_TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String USER_AGENT = "User-Agent";
     public static final Integer HTTP_METHOD_STATUS_LINE_INDEX = 0;
@@ -23,4 +24,8 @@ public class OutputConstants {
     public static final Integer REQUEST_HEADER_KEY_INDEX = 0;
     public static final Integer REQUEST_HEADER_VALUE_INDEX = 1;
     public static final Integer THREAD_SLEEP_100_MICROS = 100;
+    public static final Integer APP_ARGS_DIRECTORY_KEY_START_INDEX = 2;
+    public static final String APP_ARGS_DIRECTORY_KEY = "directory";
+    public static final Integer FILE_NAME_INDEX = 0;
+    public static final Integer EMPTY_CONTENT_LENGTH = 0;
 }
