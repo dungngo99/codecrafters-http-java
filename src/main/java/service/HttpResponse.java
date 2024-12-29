@@ -3,7 +3,13 @@ package service;
 import constants.OutputConstants;
 import dto.RequestContextDto;
 import dto.RequestDto;
+import dto.ResponseDto;
+import enums.CompressScheme;
 import handler.PathHandler;
+import utils.HttpUtils;
+
+import java.util.List;
+import java.util.Map;
 
 public class HttpResponse {
 
@@ -20,6 +26,31 @@ public class HttpResponse {
         contextDto.setBody(requestDto.getBody());
 
         PathHandler pathHandler = contextDto.getPathHandler();
-        return pathHandler.process(contextDto);
+        ResponseDto responseDto = pathHandler.process(contextDto);
+
+        fillResponseHeaders(requestDto, responseDto);
+        return convertToString(responseDto);
+    }
+
+    private static void fillResponseHeaders(RequestDto requestDto, ResponseDto responseDto) {
+        Map<String, String> requestHeaders = requestDto.getHeaders();
+        Map<String, String> responseHeaders = responseDto.getHeaders();
+
+        if (requestHeaders.containsKey(OutputConstants.ACCEPT_ENCODING)) {
+            String compressScheme = requestHeaders.get(OutputConstants.ACCEPT_ENCODING);
+            if (CompressScheme.isValid(compressScheme)) {
+                responseHeaders.put(OutputConstants.CONTENT_ENCODING, compressScheme);
+            }
+        }
+    }
+
+    private static String convertToString(ResponseDto responseDto) {
+        String headers = OutputConstants.EMPTY_STRING;
+        Map<String, String> headerMap = responseDto.getHeaders();
+        if (headerMap != null && !headerMap.isEmpty()) {
+            headers = HttpUtils.convertFromHeaders(headerMap);
+        }
+        List<String> list = List.of(responseDto.getStatusLine(), headers, responseDto.getBody());
+        return HttpUtils.fromList(list);
     }
 }

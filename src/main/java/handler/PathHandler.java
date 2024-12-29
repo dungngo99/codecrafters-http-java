@@ -1,8 +1,9 @@
 package handler;
 
 import dto.RequestContextDto;
+import dto.ResponseDto;
 
 public interface PathHandler {
     void registerPath();
-    String process(RequestContextDto contextDto);
+    ResponseDto process(RequestContextDto contextDto);
 }

@@ -3,6 +3,7 @@ package handler.impl;
 import constants.OutputConstants;
 import dto.NodeDto;
 import dto.RequestContextDto;
+import dto.ResponseDto;
 import enums.Endpoint;
 import handler.PathHandler;
 import service.HttpPath;
@@ -18,7 +19,7 @@ public class RootHandler implements PathHandler {
     }
 
     @Override
-    public String process(RequestContextDto contextDto) {
-        return HttpUtils.getOKStatus();
+    public ResponseDto process(RequestContextDto contextDto) {
+        return HttpUtils.getOKResponse();
     }
 }

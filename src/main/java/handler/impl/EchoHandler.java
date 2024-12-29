@@ -1,7 +1,7 @@
 package handler.impl;
 
-import constants.OutputConstants;
 import dto.RequestContextDto;
+import dto.ResponseDto;
 import enums.Endpoint;
 import handler.PathHandler;
 import service.HttpPath;
@@ -15,10 +15,10 @@ public class EchoHandler implements PathHandler {
     }
 
     @Override
-    public String process(RequestContextDto contextDto) {
+    public ResponseDto process(RequestContextDto contextDto) {
         String[] targets = contextDto.getTargets();
         if (targets == null || targets.length == 0) {
-            return OutputConstants.EMPTY_STRING;
+            return new ResponseDto();
         }
         return HttpUtils.getResponseWithBodyAsPlainText(targets[0]);
     }

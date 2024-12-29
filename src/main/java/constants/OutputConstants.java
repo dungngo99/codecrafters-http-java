@@ -27,4 +27,6 @@ public class OutputConstants {
     public static final Integer EMPTY_CONTENT_LENGTH = 0;
     public static final Integer INPUT_STREAM_READER_BUFFER_SIZE = 4096;
     public static final Integer INPUT_STREAM_READER_INCREMENT_CURSOR = 1;
+    public static final String ACCEPT_ENCODING = "Accept-Encoding";
+    public static final String CONTENT_ENCODING = "Content-Encoding";
 }

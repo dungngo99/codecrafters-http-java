@@ -2,6 +2,7 @@ package handler.impl;
 
 import constants.OutputConstants;
 import dto.RequestContextDto;
+import dto.ResponseDto;
 import enums.Endpoint;
 import enums.HttpMethod;
 import handler.PathHandler;
@@ -26,9 +27,9 @@ public class FileHandler implements PathHandler {
     }
 
     @Override
-    public String process(RequestContextDto contextDto) {
+    public ResponseDto process(RequestContextDto contextDto) {
         if (contextDto == null) {
-            return OutputConstants.EMPTY_STRING;
+            return new ResponseDto();
         }
         String requestMethod = contextDto.getRequestMethod();
         if (Objects.equals(requestMethod, HttpMethod.GET.name())) {
@@ -36,10 +37,10 @@ public class FileHandler implements PathHandler {
         } else if (Objects.equals(requestMethod, HttpMethod.POST.name())) {
             return handlePost(contextDto);
         }
-        return HttpUtils.getNotFoundStatus();
+        return HttpUtils.getNotFoundResponse();
     }
 
-    private String handleGet(RequestContextDto contextDto) {
+    private ResponseDto handleGet(RequestContextDto contextDto) {
         String[] targets = contextDto.getTargets();
         String fileName = targets[OutputConstants.FILE_NAME_INDEX];
         String absPathDir = SocketServer.getSystemProperty(OutputConstants.APP_ARGS_DIRECTORY_KEY);
@@ -47,7 +48,7 @@ public class FileHandler implements PathHandler {
         File file = path.toFile();
 
         if (!file.exists() || file.isDirectory()) {
-            return HttpUtils.getNotFoundStatus();
+            return HttpUtils.getNotFoundResponse();
         }
 
         try {
@@ -58,13 +59,13 @@ public class FileHandler implements PathHandler {
             System.out.println("failed to read from file due to " + e.getMessage());
         }
 
-        return HttpUtils.getNotFoundStatus();
+        return HttpUtils.getNotFoundResponse();
     }
 
-    private String handlePost(RequestContextDto contextDto) {
+    private ResponseDto handlePost(RequestContextDto contextDto) {
         String body = contextDto.getBody();
         if (body == null) {
-            return HttpUtils.getNotFoundStatus();
+            return HttpUtils.getNotFoundResponse();
         }
 
         String[] targets = contextDto.getTargets();
@@ -76,11 +77,11 @@ public class FileHandler implements PathHandler {
         try {
             FileOutputStream os = new FileOutputStream(file);
             os.write(body.getBytes(StandardCharsets.UTF_8));
-            return HttpUtils.getCreatedStatus();
+            return HttpUtils.getCreatedResponse();
         } catch (IOException e) {
             System.out.println("failed to read from file due to " + e.getMessage());
         }
 
-        return HttpUtils.getNotFoundStatus();
+        return HttpUtils.getNotFoundResponse();
     }
 }
