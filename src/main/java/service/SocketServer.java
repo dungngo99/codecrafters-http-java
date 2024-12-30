@@ -40,11 +40,11 @@ public class SocketServer {
             HttpRequest.handleHeaders(requestDto);
 
             // process the request
-            String response = HttpResponse.process(requestDto);
+            byte[] responseBytes = HttpResponse.process(requestDto);
 
             // send response to output stream
             OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(response.getBytes(StandardCharsets.UTF_8));
+            outputStream.write(responseBytes);
             outputStream.flush();
 
             Thread.sleep(Duration.of(OutputConstants.THREAD_SLEEP_100_MICROS, ChronoUnit.MICROS));

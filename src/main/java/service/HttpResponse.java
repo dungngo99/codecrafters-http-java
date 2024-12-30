@@ -4,18 +4,20 @@ import constants.OutputConstants;
 import dto.RequestContextDto;
 import dto.RequestDto;
 import dto.ResponseDto;
+import enums.CompressScheme;
 import handler.PathHandler;
 import utils.HttpUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
 public class HttpResponse {
 
-    public static String process(RequestDto requestDto) {
+    public static byte[] process(RequestDto requestDto) {
         String target = requestDto.getTargetMethod();
         if (target == null || target.isEmpty()) {
-            return OutputConstants.EMPTY_STRING;
+            return new byte[0];
         }
 
         String[] targets = target.split(OutputConstants.PATH_DELIMITER);
@@ -28,7 +30,7 @@ public class HttpResponse {
         ResponseDto responseDto = pathHandler.process(contextDto);
 
         fillResponseHeaders(requestDto, responseDto);
-        return convertToString(responseDto);
+        return convertToByteStream(responseDto);
     }
 
     private static void fillResponseHeaders(RequestDto requestDto, ResponseDto responseDto) {
@@ -41,13 +43,26 @@ public class HttpResponse {
         }
     }
 
-    private static String convertToString(ResponseDto responseDto) {
-        String headers = OutputConstants.EMPTY_STRING;
+    private static byte[] convertToByteStream(ResponseDto responseDto) {
         Map<String, String> headerMap = responseDto.getHeaders();
-        if (headerMap != null && !headerMap.isEmpty()) {
-            headers = HttpUtils.convertFromHeaders(headerMap);
+        String compressionScheme = headerMap.get(OutputConstants.CONTENT_ENCODING);
+
+        if (CompressScheme.GZIP.name().equalsIgnoreCase(compressionScheme)) {
+            byte[] var1 = (responseDto.getStatusLine() + OutputConstants.CRLF).getBytes(StandardCharsets.UTF_8);
+            byte[] var3 = HttpUtils.gzipCompress(responseDto.getBody());
+
+            headerMap.put(OutputConstants.CONTENT_LENGTH, String.valueOf(var3.length));
+            String headers = HttpUtils.convertFromHeaders(headerMap);
+            byte[] var2 = (headers + OutputConstants.CRLF).getBytes(StandardCharsets.UTF_8);
+
+            return HttpUtils.concatTripleBytes(var1, var2, var3);
+        } else {
+            String headers = OutputConstants.EMPTY_STRING;
+            if (!headerMap.isEmpty()) {
+                headers = HttpUtils.convertFromHeaders(headerMap);
+            }
+            List<String> list = List.of(responseDto.getStatusLine(), headers, responseDto.getBody());
+            return HttpUtils.fromList(list).getBytes(StandardCharsets.UTF_8);
         }
-        List<String> list = List.of(responseDto.getStatusLine(), headers, responseDto.getBody());
-        return HttpUtils.fromList(list);
     }
 }

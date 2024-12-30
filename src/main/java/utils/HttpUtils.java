@@ -5,11 +5,11 @@ import dto.ResponseDto;
 import enums.ContentType;
 import enums.StatusCode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.zip.GZIPOutputStream;
 
 public class HttpUtils {
 
@@ -97,5 +97,27 @@ public class HttpUtils {
             joiner1.add(joiner2.toString());
         }
         return joiner1.toString();
+    }
+
+    public static byte[] gzipCompress(String str) {
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
+            gzipOutputStream.write(str.getBytes(StandardCharsets.UTF_8));
+            gzipOutputStream.close();
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            return new byte[0];
+        }
+    }
+
+    public static byte[] concatTripleBytes(byte[] bytes1, byte[] bytes2, byte[] bytes3) {
+        int l1 = bytes1.length;
+        int l2 = bytes2.length;
+        int l3 = bytes3.length;
+        byte[] bytes = Arrays.copyOf(bytes1, l1 + l2 + l3);
+        System.arraycopy(bytes2, 0, bytes, l1, l2);
+        System.arraycopy(bytes3, 0, bytes, l1 + l2, l3);
+        return bytes;
     }
 }
