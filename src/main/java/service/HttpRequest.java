@@ -1,13 +1,15 @@
 package service;
 
-import constants.OutputConstants;
 import dto.RequestDto;
+import enums.CompressScheme;
 import enums.HttpMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
+import java.util.StringJoiner;
 
 import static constants.OutputConstants.*;
 
@@ -63,5 +65,28 @@ public class HttpRequest {
         char[] chars = helper.readNChars(l);
         String body = new String(chars);
         requestDto.setBody(body);
+    }
+
+    public static void handleHeaders(RequestDto requestDto) {
+        Map<String, String> headers = requestDto.getHeaders();
+        if (headers == null || !headers.containsKey(ACCEPT_ENCODING)) {
+            return;
+        }
+        String acceptEncodings = headers.get(ACCEPT_ENCODING);
+        if (acceptEncodings.isBlank()) {
+            return;
+        }
+        String[] acceptEncodingArr = acceptEncodings.split(COMMA_SPACE_DELIMITER);
+        StringJoiner joiner = new StringJoiner(COMMA_SPACE_DELIMITER);
+        for (String acceptEncoding_: acceptEncodingArr) {
+            if (CompressScheme.isValid(acceptEncoding_)) {
+                joiner.add((acceptEncoding_));
+            }
+        }
+        if (joiner.toString().isBlank()) {
+            headers.remove(ACCEPT_ENCODING);
+            return;
+        }
+        headers.put(ACCEPT_ENCODING, joiner.toString());
     }
 }

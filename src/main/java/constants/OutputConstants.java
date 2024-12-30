@@ -11,6 +11,7 @@ public class OutputConstants {
     public static final String NOT_FOUND = "not_found";
     public static final String PATH_DELIMITER = "/";
     public static final String COLON = ":";
+    public static final String COMMA_SPACE_DELIMITER = ", ";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String USER_AGENT = "User-Agent";

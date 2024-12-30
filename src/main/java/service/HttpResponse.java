@@ -4,7 +4,6 @@ import constants.OutputConstants;
 import dto.RequestContextDto;
 import dto.RequestDto;
 import dto.ResponseDto;
-import enums.CompressScheme;
 import handler.PathHandler;
 import utils.HttpUtils;
 
@@ -38,9 +37,7 @@ public class HttpResponse {
 
         if (requestHeaders.containsKey(OutputConstants.ACCEPT_ENCODING)) {
             String compressScheme = requestHeaders.get(OutputConstants.ACCEPT_ENCODING);
-            if (CompressScheme.isValid(compressScheme)) {
-                responseHeaders.put(OutputConstants.CONTENT_ENCODING, compressScheme);
-            }
+            responseHeaders.put(OutputConstants.CONTENT_ENCODING, compressScheme);
         }
     }
 

@@ -37,6 +37,7 @@ public class SocketServer {
             // parse the input stream
             InputStream inputStream = socket.getInputStream();
             RequestDto requestDto = HttpRequest.parseRequest(inputStream);
+            HttpRequest.handleHeaders(requestDto);
 
             // process the request
             String response = HttpResponse.process(requestDto);
