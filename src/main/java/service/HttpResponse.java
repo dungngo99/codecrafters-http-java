@@ -27,7 +27,7 @@ public class HttpResponse {
         return pathHandler.process(contextDto);
     }
 
-    public static void fillResponseHeaders(RequestDto requestDto, ResponseDto responseDto) {
+    public static void fillCommonResponseHeaders(RequestDto requestDto, ResponseDto responseDto) {
         Map<String, String> requestHeaders = requestDto.getHeaders();
         Map<String, String> responseHeaders = responseDto.getHeaders();
         if (Objects.isNull(requestHeaders) || Objects.isNull(responseHeaders)) {
@@ -37,6 +37,9 @@ public class HttpResponse {
         if (requestHeaders.containsKey(Constants.ACCEPT_ENCODING)) {
             String compressScheme = requestHeaders.get(Constants.ACCEPT_ENCODING);
             responseHeaders.put(Constants.CONTENT_ENCODING, compressScheme);
+        }
+        if (requestHeaders.containsKey(Constants.CONNECTION)) {
+            responseHeaders.put(Constants.CONNECTION, Constants.CONNECTION_CLOSE);
         }
     }
 }

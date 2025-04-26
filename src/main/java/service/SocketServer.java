@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
+import java.util.Objects;
 
 public class SocketServer {
 
@@ -30,18 +32,30 @@ public class SocketServer {
             // parse the input stream
             InputStream inputStream = socket.getInputStream();
             RequestDto requestDto = HttpRequest.parseRequest(inputStream);
-            HttpRequest.handleHeaders(requestDto);
+            HttpRequest.fillHeaders(requestDto);
 
             // process the request
             ResponseDto responseDto = HttpResponse.process(requestDto);
-            HttpResponse.fillResponseHeaders(requestDto, responseDto);
+            HttpResponse.fillCommonResponseHeaders(requestDto, responseDto);
 
             // send response to output stream
             byte[] responseBytes = ByteHelper.convertToByteStream(responseDto);
             ByteHelper.writeThenFlushStream(socket, responseBytes);
 
+            // handle post connection
+            handlePostConnection(socket, responseDto);
             Thread.sleep(Duration.of(Constants.THREAD_SLEEP_100_MICROS, ChronoUnit.MICROS));
         }
+    }
+
+    private static void handlePostConnection(Socket socket, ResponseDto responseDto) throws IOException {
+        Map<String, String> headers = responseDto.getHeaders();
+        if (Objects.isNull(headers)
+                || !headers.containsKey(Constants.CONNECTION)
+                || !Objects.equals(headers.get(Constants.CONNECTION), Constants.CONNECTION_CLOSE)) {
+            return;
+        }
+        socket.close();
     }
 
     public static void addDirectoryIfExist(String[] args) {

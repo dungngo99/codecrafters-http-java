@@ -60,7 +60,7 @@ public class HttpRequest {
         requestDto.setBody(body);
     }
 
-    public static void handleHeaders(RequestDto requestDto) {
+    public static void fillHeaders(RequestDto requestDto) {
         Map<String, String> headers = requestDto.getHeaders();
         if (Objects.isNull(headers) || !headers.containsKey(ACCEPT_ENCODING)) {
             return;

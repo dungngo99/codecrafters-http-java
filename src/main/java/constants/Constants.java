@@ -28,4 +28,6 @@ public class Constants {
     public static final Integer EMPTY_CONTENT_LENGTH = 0;
     public static final String ACCEPT_ENCODING = "Accept-Encoding";
     public static final String CONTENT_ENCODING = "Content-Encoding";
+    public static final String CONNECTION = "Connection";
+    public static final String CONNECTION_CLOSE = "close";
 }
