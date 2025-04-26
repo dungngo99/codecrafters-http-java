@@ -9,9 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 
-import static constants.OutputConstants.*;
+import static constants.Constants.*;
 
 public class HttpRequest {
 
@@ -19,36 +20,29 @@ public class HttpRequest {
         RequestDto requestDto = new RequestDto();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            BufferedReaderHelper helper = new BufferedReaderHelper(bufferedReader);
-            if (!helper.canRead()) {
-                return requestDto;
-            }
-
-            fillRequestLine(helper, requestDto);
-            fillHeaders(helper, requestDto);
-            fillBody(helper, requestDto);
+            fillRequestLine(bufferedReader, requestDto);
+            fillHeaders(bufferedReader, requestDto);
+            fillBody(bufferedReader, requestDto);
         } catch (IOException e) {
             System.out.printf("failed to parse http request due to, error=%s\n", e.getMessage());
         }
         return requestDto;
     }
 
-    private static void fillRequestLine(BufferedReaderHelper helper, RequestDto requestDto) {
-        char[] chars = helper.readNextChars();
-        String requestLine = new String(chars);
+    private static void fillRequestLine(BufferedReader reader, RequestDto requestDto) throws IOException {
+        String requestLine = ByteHelper.readNextString(reader);
         String[] requestLines = requestLine.split(TAB);
         requestDto.setHttpMethod(HttpMethod.ofString(requestLines[HTTP_METHOD_INDEX]));
         requestDto.setTargetMethod(requestLines[HTTP_TARGET_METHOD_INDEX]);
         requestDto.setHttpVersion(requestLines[HTTP_VERSION_INDEX]);
     }
 
-    private static void fillHeaders(BufferedReaderHelper helper, RequestDto requestDto) {
+    private static void fillHeaders(BufferedReader reader, RequestDto requestDto) throws IOException {
         while (true) {
-            char[] chars = helper.readNextChars();
-            if (chars.length == 0) {
+            String header = ByteHelper.readNextString(reader);
+            if (header.isBlank()) {
                 break;
             }
-            String header = new String(chars);
             String[] pair = header.split(REQUEST_HEADER_DELIMITER);
             String key = pair[REQUEST_HEADER_KEY_INDEX].strip();
             String value = pair[REQUEST_HEADER_VALUE_INDEX].strip();
@@ -56,24 +50,24 @@ public class HttpRequest {
         }
     }
 
-    private static void fillBody(BufferedReaderHelper helper, RequestDto requestDto) {
+    private static void fillBody(BufferedReader reader, RequestDto requestDto) throws IOException {
         String contentLength = requestDto.getHeaders().get(CONTENT_LENGTH);
         if (contentLength == null || contentLength.isEmpty()) {
             return;
         }
-        Integer l = Integer.parseInt(contentLength);
-        char[] chars = helper.readNChars(l);
-        String body = new String(chars);
+        int l = Integer.parseInt(contentLength);
+        String body = ByteHelper.readNextStringLengthN(reader, l);
         requestDto.setBody(body);
     }
 
     public static void handleHeaders(RequestDto requestDto) {
         Map<String, String> headers = requestDto.getHeaders();
-        if (headers == null || !headers.containsKey(ACCEPT_ENCODING)) {
+        if (Objects.isNull(headers) || !headers.containsKey(ACCEPT_ENCODING)) {
             return;
         }
         String acceptEncodings = headers.get(ACCEPT_ENCODING);
         if (acceptEncodings.isBlank()) {
+            headers.remove(ACCEPT_ENCODING);
             return;
         }
         String[] acceptEncodingArr = acceptEncodings.split(COMMA_SPACE_DELIMITER);

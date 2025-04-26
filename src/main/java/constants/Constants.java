@@ -1,10 +1,10 @@
 package constants;
 
-public class OutputConstants {
+public class Constants {
     public static final String HTTP_VERSION = "HTTP/1.1";
     public static final String CRLF = "\r\n";
     public static final char CR = '\r';
-    public static final Integer CRLF_LENGTH = 2;
+    public static final Integer CRLF_LENGTH_SKIP = 1;
     public static final String EMPTY_STRING = "";
     public static final String TAB = " ";
     public static final String ROOT = "root";
@@ -26,8 +26,6 @@ public class OutputConstants {
     public static final String APP_ARGS_DIRECTORY_KEY = "directory";
     public static final Integer FILE_NAME_INDEX = 0;
     public static final Integer EMPTY_CONTENT_LENGTH = 0;
-    public static final Integer INPUT_STREAM_READER_BUFFER_SIZE = 4096;
-    public static final Integer INPUT_STREAM_READER_INCREMENT_CURSOR = 1;
     public static final String ACCEPT_ENCODING = "Accept-Encoding";
     public static final String CONTENT_ENCODING = "Content-Encoding";
 }

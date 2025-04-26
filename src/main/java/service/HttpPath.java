@@ -1,6 +1,6 @@
 package service;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.NodeDto;
 import dto.RequestContextDto;
 import enums.Endpoint;
@@ -52,7 +52,7 @@ public class HttpPath {
     }
 
     public static NodeDto[] convert2PathNode(Endpoint path, PathHandler pathHandler) {
-        String[] paths = path.getPath().split(OutputConstants.PATH_DELIMITER);
+        String[] paths = path.getPath().split(Constants.PATH_DELIMITER);
         NodeDto[] nodeDtoArr = new NodeDto[paths.length];
         for (int i=0; i<paths.length; i++) {
             nodeDtoArr[i] = new NodeDto(paths[i]);

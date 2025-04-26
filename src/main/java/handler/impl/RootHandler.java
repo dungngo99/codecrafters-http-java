@@ -1,6 +1,6 @@
 package handler.impl;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.NodeDto;
 import dto.RequestContextDto;
 import dto.ResponseDto;
@@ -12,7 +12,7 @@ import utils.HttpUtils;
 public class RootHandler implements PathHandler {
     @Override
     public void registerPath() {
-        NodeDto nodeDto = new NodeDto(OutputConstants.ROOT);
+        NodeDto nodeDto = new NodeDto(Constants.ROOT);
         nodeDto.setPathHandler(this);
         nodeDto.setTerminal(Endpoint.ROOT.isTerminal());
         HttpPath.ROOT = nodeDto;

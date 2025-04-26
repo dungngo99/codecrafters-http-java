@@ -1,6 +1,6 @@
 package utils;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.ResponseDto;
 import enums.ContentType;
 import enums.StatusCode;
@@ -14,7 +14,7 @@ import java.util.zip.GZIPOutputStream;
 public class HttpUtils {
 
     public static String fromList(List<String> list) {
-        StringJoiner joiner = new StringJoiner(OutputConstants.CRLF, OutputConstants.EMPTY_STRING, OutputConstants.CRLF);
+        StringJoiner joiner = new StringJoiner(Constants.CRLF, Constants.EMPTY_STRING, Constants.EMPTY_STRING);
         for (String str: list) {
             joiner.add(str);
         }
@@ -22,77 +22,76 @@ public class HttpUtils {
     }
 
     public static ResponseDto getOKResponse() {
-        StringJoiner status = new StringJoiner(OutputConstants.TAB);
+        StringJoiner status = new StringJoiner(Constants.TAB);
         status
-                .add(OutputConstants.HTTP_VERSION)
+                .add(Constants.HTTP_VERSION)
                 .add(String.valueOf(StatusCode.OK.getCode()))
                 .add(StatusCode.OK.getMessage());
         String statusLine = status.toString();
         Map<String, String> headers = new HashMap<>();
-        String body = OutputConstants.EMPTY_STRING;
+        String body = Constants.EMPTY_STRING;
         return new ResponseDto(statusLine, headers, body);
     }
 
     public static ResponseDto getNotFoundResponse() {
-        StringJoiner status = new StringJoiner(OutputConstants.TAB);
+        StringJoiner status = new StringJoiner(Constants.TAB);
         status
-                .add(OutputConstants.HTTP_VERSION)
+                .add(Constants.HTTP_VERSION)
                 .add(String.valueOf(StatusCode.NOT_FOUND.getCode()))
                 .add(StatusCode.NOT_FOUND.getMessage());
         String statusLine = status.toString();
         Map<String, String> headers = new HashMap<>();
-        headers.put(OutputConstants.CONTENT_LENGTH, String.valueOf(OutputConstants.EMPTY_CONTENT_LENGTH));
-        String body = OutputConstants.EMPTY_STRING;
+        headers.put(Constants.CONTENT_LENGTH, String.valueOf(Constants.EMPTY_CONTENT_LENGTH));
+        String body = Constants.EMPTY_STRING;
         return new ResponseDto(statusLine, headers, body);
     }
 
     public static ResponseDto getCreatedResponse() {
-        StringJoiner status = new StringJoiner(OutputConstants.TAB);
+        StringJoiner status = new StringJoiner(Constants.TAB);
         status
-                .add(OutputConstants.HTTP_VERSION)
+                .add(Constants.HTTP_VERSION)
                 .add(String.valueOf(StatusCode.CREATED.getCode()))
                 .add(StatusCode.CREATED.getMessage());
         String statusLine = status.toString();
         Map<String, String> headers = new HashMap<>();
-        headers.put(OutputConstants.CONTENT_LENGTH, String.valueOf(OutputConstants.EMPTY_CONTENT_LENGTH));
-        String body = OutputConstants.EMPTY_STRING;
+        headers.put(Constants.CONTENT_LENGTH, String.valueOf(Constants.EMPTY_CONTENT_LENGTH));
+        String body = Constants.EMPTY_STRING;
         return new ResponseDto(statusLine, headers, body);
     }
 
     public static ResponseDto getResponseWithBodyAsPlainText(String text) {
-        StringJoiner status = new StringJoiner(OutputConstants.TAB);
+        StringJoiner status = new StringJoiner(Constants.TAB);
         status
-                .add(OutputConstants.HTTP_VERSION)
+                .add(Constants.HTTP_VERSION)
                 .add(String.valueOf(StatusCode.OK.getCode()))
                 .add(StatusCode.OK.getMessage());
         String statusLine = status.toString();
         Map<String, String> headers = new HashMap<>();
-        headers.put(OutputConstants.CONTENT_TYPE, ContentType.PLAIN_TEXT.getContentType());
-        headers.put(OutputConstants.CONTENT_LENGTH, String.valueOf(text.length()));
-        String body = text;
-        return new ResponseDto(statusLine, headers, body);
+        headers.put(Constants.CONTENT_TYPE, ContentType.PLAIN_TEXT.getContentType());
+        headers.put(Constants.CONTENT_LENGTH, String.valueOf(text.length()));
+        return new ResponseDto(statusLine, headers, text);
     }
 
     public static ResponseDto getResponseWithBodyAsByteStream(byte[] bytes) {
-        StringJoiner status = new StringJoiner(OutputConstants.TAB);
+        StringJoiner status = new StringJoiner(Constants.TAB);
         status
-                .add(OutputConstants.HTTP_VERSION)
+                .add(Constants.HTTP_VERSION)
                 .add(String.valueOf(StatusCode.OK.getCode()))
                 .add(StatusCode.OK.getMessage());
         String statusLine = status.toString();
         Map<String, String> headers = new HashMap<>();
-        headers.put(OutputConstants.CONTENT_TYPE, ContentType.APPLICATION_OCTET_STREAM.getContentType());
-        headers.put(OutputConstants.CONTENT_LENGTH, String.valueOf(bytes.length));
+        headers.put(Constants.CONTENT_TYPE, ContentType.APPLICATION_OCTET_STREAM.getContentType());
+        headers.put(Constants.CONTENT_LENGTH, String.valueOf(bytes.length));
         String body = new String(bytes, StandardCharsets.UTF_8);
         return new ResponseDto(statusLine, headers, body);
     }
 
     public static String convertFromHeaders(Map<String, String> headers) {
-        StringJoiner joiner1 = new StringJoiner(OutputConstants.CRLF, OutputConstants.EMPTY_STRING, OutputConstants.CRLF);
+        StringJoiner joiner1 = new StringJoiner(Constants.CRLF, Constants.EMPTY_STRING, Constants.CRLF);
         for (Map.Entry<String, String> entry: headers.entrySet()) {
-            StringJoiner joiner2 = new StringJoiner(OutputConstants.TAB);
+            StringJoiner joiner2 = new StringJoiner(Constants.TAB);
             joiner2
-                    .add(entry.getKey() + OutputConstants.COLON)
+                    .add(entry.getKey() + Constants.COLON)
                     .add(entry.getValue());
             joiner1.add(joiner2.toString());
         }

@@ -1,6 +1,6 @@
 package handler.impl;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.NodeDto;
 import dto.RequestContextDto;
 import dto.ResponseDto;
@@ -12,7 +12,7 @@ import utils.HttpUtils;
 public class NotFoundHandler implements PathHandler {
     @Override
     public void registerPath() {
-        NodeDto nodeDto = new NodeDto(OutputConstants.NOT_FOUND);
+        NodeDto nodeDto = new NodeDto(Constants.NOT_FOUND);
         nodeDto.setPathHandler(this);
         nodeDto.setTerminal(Endpoint.NOT_FOUND.isTerminal());
         HttpPath.NOT_FOUND = nodeDto;

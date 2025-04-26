@@ -1,6 +1,6 @@
 package handler.impl;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.RequestContextDto;
 import dto.ResponseDto;
 import enums.Endpoint;
@@ -42,8 +42,8 @@ public class FileHandler implements PathHandler {
 
     private ResponseDto handleGet(RequestContextDto contextDto) {
         String[] targets = contextDto.getTargets();
-        String fileName = targets[OutputConstants.FILE_NAME_INDEX];
-        String absPathDir = SocketServer.getSystemProperty(OutputConstants.APP_ARGS_DIRECTORY_KEY);
+        String fileName = targets[Constants.FILE_NAME_INDEX];
+        String absPathDir = SocketServer.getSystemProperty(Constants.APP_ARGS_DIRECTORY_KEY);
         Path path = Paths.get(absPathDir, fileName);
         File file = path.toFile();
 
@@ -69,8 +69,8 @@ public class FileHandler implements PathHandler {
         }
 
         String[] targets = contextDto.getTargets();
-        String fileName = targets[OutputConstants.FILE_NAME_INDEX];
-        String absPathDir = SocketServer.getSystemProperty(OutputConstants.APP_ARGS_DIRECTORY_KEY);
+        String fileName = targets[Constants.FILE_NAME_INDEX];
+        String absPathDir = SocketServer.getSystemProperty(Constants.APP_ARGS_DIRECTORY_KEY);
         Path path = Paths.get(absPathDir, fileName);
         File file = path.toFile();
 

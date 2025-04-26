@@ -53,15 +53,4 @@ public class RequestDto {
     public void setBody(String body) {
         this.body = body;
     }
-
-    @Override
-    public String toString() {
-        return "RequestDto{" +
-                "httpMethod='" + httpMethod + '\'' +
-                ", targetMethod='" + targetMethod + '\'' +
-                ", httpVersion='" + httpVersion + '\'' +
-                ", headers=" + headers +
-                ", body=" + body +
-                '}';
-    }
 }

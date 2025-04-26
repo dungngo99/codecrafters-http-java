@@ -1,14 +1,13 @@
 package service;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.RequestDto;
+import dto.ResponseDto;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -18,16 +17,10 @@ public class SocketServer {
 
     public static void handleConnectionAsync(Socket socket) {
         new Thread(() -> {
-            try {
+            try (socket) {
                 handleConnection(socket);
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            } finally {
-                try {
-                    socket.close();
-                } catch (IOException ignore) {
-
-                }
+            } catch (IOException | InterruptedException | RuntimeException e) {
+                System.out.println("failed to handle socket connection due to " + e.getMessage());
             }
         }).start();
     }
@@ -40,14 +33,14 @@ public class SocketServer {
             HttpRequest.handleHeaders(requestDto);
 
             // process the request
-            byte[] responseBytes = HttpResponse.process(requestDto);
+            ResponseDto responseDto = HttpResponse.process(requestDto);
+            HttpResponse.fillResponseHeaders(requestDto, responseDto);
 
             // send response to output stream
-            OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(responseBytes);
-            outputStream.flush();
+            byte[] responseBytes = ByteHelper.convertToByteStream(responseDto);
+            ByteHelper.writeThenFlushStream(socket, responseBytes);
 
-            Thread.sleep(Duration.of(OutputConstants.THREAD_SLEEP_100_MICROS, ChronoUnit.MICROS));
+            Thread.sleep(Duration.of(Constants.THREAD_SLEEP_100_MICROS, ChronoUnit.MICROS));
         }
     }
 
@@ -55,14 +48,14 @@ public class SocketServer {
         if (args.length < 2) {
             return;
         }
-        String directoryKey = args[0].substring(OutputConstants.APP_ARGS_DIRECTORY_KEY_START_INDEX);
+        String directoryKey = args[0].substring(Constants.APP_ARGS_DIRECTORY_KEY_START_INDEX);
         String value = args[1];
 
         Path path = Paths.get(value);
         String absPath = path.toAbsolutePath().toString();
         File file = path.toFile();
         if (!file.exists()) {
-            file.mkdirs();
+            boolean ignored = file.mkdirs();
         }
 
         setArgs2SystemProperty(directoryKey, absPath);

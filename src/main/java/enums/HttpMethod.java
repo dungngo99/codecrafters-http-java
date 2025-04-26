@@ -1,6 +1,6 @@
 package enums;
 
-import constants.OutputConstants;
+import constants.Constants;
 
 public enum HttpMethod {
     GET,
@@ -16,6 +16,6 @@ public enum HttpMethod {
                 return method.name();
             }
         }
-        return OutputConstants.EMPTY_STRING;
+        return Constants.EMPTY_STRING;
     }
 }

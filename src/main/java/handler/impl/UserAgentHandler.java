@@ -1,6 +1,6 @@
 package handler.impl;
 
-import constants.OutputConstants;
+import constants.Constants;
 import dto.RequestContextDto;
 import dto.ResponseDto;
 import enums.Endpoint;
@@ -19,7 +19,7 @@ public class UserAgentHandler implements PathHandler {
         if (contextDto == null || contextDto.getHeaders().isEmpty()) {
             return new ResponseDto();
         }
-        String userAgent = contextDto.getHeaders().get(OutputConstants.USER_AGENT);
+        String userAgent = contextDto.getHeaders().get(Constants.USER_AGENT);
         return HttpUtils.getResponseWithBodyAsPlainText(userAgent);
     }
 }
